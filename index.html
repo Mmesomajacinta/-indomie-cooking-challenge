@@ -3,259 +3,805 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jessy Indomie Cooking Challenge</title>
+<title>Jessy — Indomie Cooking Challenge</title>
 
 <style>
 *{
   box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
 }
 
 body{
   margin:0;
-  font-family:Arial,sans-serif;
-  background:#171717;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#101217;
   color:white;
-}
-
-.game{
-  max-width:900px;
-  margin:auto;
-  min-height:100vh;
-  background:linear-gradient(#ffb300,#fff3c4);
-  overflow:hidden;
-}
-
-.header{
-  background:#d71920;
-  padding:14px;
-  text-align:center;
-  border-bottom:5px solid #ffd200;
-}
-
-.header h1{
-  margin:0;
-  font-size:25px;
-}
-
-.header p{
-  margin:5px 0 0;
-  font-size:14px;
-}
-
-.stats{
-  display:flex;
-  justify-content:space-around;
-  background:#222;
-  padding:10px;
-  font-weight:bold;
-}
-
-.stage{
-  position:relative;
-  min-height:500px;
-  padding:15px;
-  background:
-    linear-gradient(rgba(255,255,255,.2),rgba(0,0,0,.15)),
-    url("Screenshot_2026-08-24-11-06-53-64_680d03679600f7af0b4c700c6b270fe7.jpg");
-  background-size:cover;
-  background-position:center;
-}
-
-.characters{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:10px;
-}
-
-.person{
-  width:30%;
-  text-align:center;
-  background:rgba(0,0,0,.65);
-  border-radius:15px;
-  padding:8px;
-}
-
-.person img{
-  width:100%;
-  height:180px;
-  object-fit:contain;
-  background:#eee;
-  border-radius:10px;
-}
-
-.person h3{
-  margin:6px 0 0;
-}
-
-.judge{
-  border:3px solid gold;
-}
-
-.contestant{
-  border:3px solid #00c853;
-}
-
-.judge-comment{
-  margin-top:8px;
-  background:white;
-  color:#111;
-  padding:8px;
-  border-radius:10px;
-  font-size:13px;
-}
-
-.cooking-area{
-  margin:20px auto 0;
-  max-width:520px;
-  text-align:center;
-}
-
-.table{
-  background:#6d3517;
-  border:8px solid #40200e;
-  border-radius:20px;
-  padding:20px;
-}
-
-.stove{
-  background:#111;
-  border-radius:20px;
-  padding:18px;
-  box-shadow:0 8px 20px #0008;
-}
-
-.fire{
-  font-size:45px;
-  animation:fire 0.6s infinite alternate;
-}
-
-@keyframes fire{
-  from{transform:scale(.9)}
-  to{transform:scale(1.1)}
-}
-
-.pan{
-  margin:auto;
-  width:230px;
-  height:100px;
-  background:#333;
-  border-radius:50%;
-  border:8px solid #111;
-  position:relative;
-  overflow:hidden;
-}
-
-.food{
-  position:absolute;
-  inset:15px;
-  border-radius:50%;
-  background:#e5b63b;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:35px;
-}
-
-.food.empty{
-  background:#222;
-}
-
-.food.cooked{
-  background:#d98b20;
-}
-
-.ingredients{
-  margin-top:15px;
-  display:flex;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-.ingredient{
-  background:white;
-  color:#111;
-  border:2px solid #333;
-  border-radius:10px;
-  padding:8px 10px;
-  font-size:14px;
-}
-
-.controls{
-  margin-top:15px;
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
+  overflow-x:hidden;
 }
 
 button{
-  border:none;
-  padding:14px;
+  font-family:inherit;
+}
+
+#game{
+  width:100%;
+  max-width:1100px;
+  min-height:100vh;
+  margin:auto;
+  background:#151820;
+  position:relative;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar{
+  height:72px;
+  background:linear-gradient(180deg,#202631,#11151b);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:8px 15px;
+  border-bottom:3px solid #e2aa25;
+  position:relative;
+  z-index:20;
+}
+
+.logo{
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.logo span{
+  color:#ffca28;
+}
+
+.timerBox,
+.scoreBox{
+  background:#090b0e;
+  border:2px solid #444b57;
   border-radius:12px;
+  padding:7px 13px;
+  text-align:center;
+  min-width:82px;
+}
+
+.timerBox.danger{
+  border-color:#e53935;
+  animation:pulse .5s infinite alternate;
+}
+
+@keyframes pulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.06)}
+}
+
+.smallLabel{
+  display:block;
+  color:#9ca3ad;
+  font-size:10px;
+  text-transform:uppercase;
+}
+
+.value{
+  font-size:20px;
+  font-weight:900;
+}
+
+/* =========================
+   STAGE
+========================= */
+
+.stage{
+  min-height:calc(100vh - 72px);
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 10%,#6d7580 0%,#303640 28%,#171b22 65%,#0e1014 100%);
+}
+
+/* studio lights */
+
+.stage:before,
+.stage:after{
+  content:"";
+  position:absolute;
+  top:-80px;
+  width:280px;
+  height:500px;
+  background:linear-gradient(
+    180deg,
+    rgba(255,235,180,.22),
+    rgba(255,235,180,0)
+  );
+  filter:blur(15px);
+  transform:rotate(15deg);
+  pointer-events:none;
+}
+
+.stage:before{
+  left:-90px;
+}
+
+.stage:after{
+  right:-90px;
+  transform:rotate(-15deg);
+}
+
+/* back wall */
+
+.backWall{
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:43%;
+  background:
+    linear-gradient(90deg,
+      rgba(255,255,255,.05),
+      transparent 20%,
+      transparent 80%,
+      rgba(255,255,255,.05)
+    ),
+    #252b34;
+  border-bottom:5px solid #111;
+}
+
+.backWall .showTitle{
+  position:absolute;
+  left:50%;
+  top:35px;
+  transform:translateX(-50%);
+  font-size:clamp(20px,4vw,42px);
+  font-weight:1000;
+  letter-spacing:3px;
+  color:#fff;
+  text-shadow:0 3px 12px #000;
+  white-space:nowrap;
+}
+
+.backWall .showTitle span{
+  color:#ffca28;
+}
+
+.wallLight{
+  position:absolute;
+  width:70px;
+  height:30px;
+  top:15px;
+  border-radius:50%;
+  background:#fff4cf;
+  box-shadow:0 0 35px 15px rgba(255,225,150,.4);
+}
+
+.wallLight.one{left:12%}
+.wallLight.two{left:45%}
+.wallLight.three{right:12%}
+
+/* floor */
+
+.floor{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:62%;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #272b31 0px,
+      #272b31 75px,
+      #1e2228 76px,
+      #1e2228 150px
+    );
+  transform:perspective(500px) rotateX(18deg);
+  transform-origin:bottom;
+  opacity:.9;
+}
+
+/* =========================
+   CONTESTANT AREA
+========================= */
+
+contestantArea{
+  display:block;
+}
+
+.contestant{
+  position:absolute;
+  left:8%;
+  top:21%;
+  width:260px;
+  height:370px;
+  z-index:7;
+}
+
+.contestantGlow{
+  position:absolute;
+  bottom:20px;
+  left:20px;
+  width:210px;
+  height:40px;
+  border-radius:50%;
+  background:#0008;
+  filter:blur(8px);
+}
+
+.jessyImage{
+  position:absolute;
+  left:15px;
+  bottom:25px;
+  width:220px;
+  height:330px;
+  object-fit:contain;
+  object-position:center bottom;
+  filter:drop-shadow(0 12px 8px rgba(0,0,0,.55));
+  z-index:2;
+}
+
+/* if image is transparent, it will blend nicely */
+
+.nameTag{
+  position:absolute;
+  bottom:0;
+  left:40px;
+  background:#111;
+  border:2px solid #ffca28;
+  padding:6px 20px;
+  border-radius:20px;
+  font-weight:900;
+  z-index:5;
+}
+
+/* =========================
+   JUDGE
+========================= */
+
+.judgeArea{
+  position:absolute;
+  right:7%;
+  top:17%;
+  width:250px;
+  height:330px;
+  z-index:7;
+}
+
+.judgeCard{
+  position:absolute;
+  top:0;
+  right:0;
+  background:rgba(10,12,15,.9);
+  border:2px solid #d6a82a;
+  border-radius:14px;
+  padding:8px 15px;
+  z-index:10;
+  text-align:center;
+  min-width:150px;
+}
+
+.judgeCard strong{
+  display:block;
   font-size:16px;
+}
+
+.judgeCard span{
+  color:#ffca28;
+  font-size:11px;
+}
+
+.judgeImage{
+  position:absolute;
+  bottom:15px;
+  left:0;
+  width:240px;
+  height:280px;
+  object-fit:contain;
+  filter:drop-shadow(0 12px 8px rgba(0,0,0,.6));
+}
+
+.speech{
+  position:absolute;
+  top:45px;
+  left:-40px;
+  width:190px;
+  background:white;
+  color:#16191d;
+  border-radius:15px;
+  padding:10px;
+  font-size:12px;
   font-weight:bold;
+  box-shadow:0 5px 20px #0008;
+  z-index:12;
+}
+
+.speech:after{
+  content:"";
+  position:absolute;
+  bottom:-12px;
+  right:25px;
+  border-width:12px 10px 0 10px;
+  border-style:solid;
+  border-color:white transparent transparent transparent;
+}
+
+/* =========================
+   COOKING COUNTER
+========================= */
+
+counter{
+  display:block;
+}
+
+.counter{
+  position:absolute;
+  left:5%;
+  right:5%;
+  bottom:15%;
+  height:175px;
+  z-index:9;
+  background:
+    linear-gradient(#87552f,#59351f);
+  border:5px solid #301d12;
+  border-radius:20px 20px 10px 10px;
+  box-shadow:
+    0 18px 30px #000b,
+    inset 0 8px 0 rgba(255,255,255,.08);
+}
+
+.counterTop{
+  height:35px;
+  background:linear-gradient(#b87a43,#71431f);
+  border-bottom:5px solid #352011;
+  border-radius:14px 14px 0 0;
+}
+
+/* stove */
+
+.stove{
+  position:absolute;
+  left:36%;
+  top:15px;
+  width:220px;
+  height:125px;
+  background:#11151a;
+  border:5px solid #080a0d;
+  border-radius:15px;
+  box-shadow:inset 0 0 15px #000;
+}
+
+.burner{
+  position:absolute;
+  left:25px;
+  right:25px;
+  top:15px;
+  height:65px;
+  border-radius:50%;
+  background:
+    radial-gradient(circle,
+      #111 0 20%,
+      #30343a 21% 35%,
+      #0c0e12 36% 48%,
+      #292d32 49% 58%,
+      #0a0b0d 59%);
+  border:4px solid #050608;
+}
+
+.flame{
+  position:absolute;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
+  font-size:50px;
+  opacity:0;
+  transition:.3s;
+  filter:drop-shadow(0 0 12px #ff6d00);
+}
+
+.flame.on{
+  opacity:1;
+  animation:flame .35s infinite alternate;
+}
+
+@keyframes flame{
+  from{transform:translateX(-50%) scale(.9)}
+  to{transform:translateX(-50%) scale(1.08)}
+}
+
+/* pot */
+
+.pot{
+  position:absolute;
+  left:50%;
+  top:40px;
+  transform:translateX(-50%);
+  width:150px;
+  height:70px;
+  border-radius:50% 50% 35% 35%;
+  background:linear-gradient(#575d63,#171a1e);
+  border:5px solid #0a0b0d;
+  z-index:5;
+  overflow:visible;
+}
+
+.potInside{
+  position:absolute;
+  left:12px;
+  right:12px;
+  top:8px;
+  height:38px;
+  border-radius:50%;
+  background:#171717;
+  overflow:hidden;
+}
+
+.noodles{
+  position:absolute;
+  left:15px;
+  right:15px;
+  top:7px;
+  height:25px;
+  border-radius:50%;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      #e6ad27 0px,
+      #e6ad27 3px,
+      #b87916 4px,
+      #b87916 6px
+    );
+  opacity:0;
+  transition:.4s;
+}
+
+.noodles.show{
+  opacity:1;
+}
+
+.foodExtras{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:23px;
+  letter-spacing:3px;
+  opacity:0;
+  transition:.3s;
+}
+
+.foodExtras.show{
+  opacity:1;
+}
+
+.handle{
+  position:absolute;
+  right:-72px;
+  top:22px;
+  width:80px;
+  height:20px;
+  border-radius:20px;
+  background:#202328;
+  border:4px solid #0b0c0e;
+}
+
+/* ingredients on counter */
+
+.ingredientsTray{
+  position:absolute;
+  left:20px;
+  top:55px;
+  display:flex;
+  gap:7px;
+}
+
+.ingredientBox{
+  width:55px;
+  height:55px;
+  border-radius:10px;
+  background:#ececec;
+  color:#171717;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  box-shadow:0 4px 7px #0008;
   cursor:pointer;
-  background:#d71920;
+  transition:.15s;
+  border:2px solid #bbb;
+}
+
+.ingredientBox:active{
+  transform:scale(.9);
+}
+
+.ingredientBox.selected{
+  border:3px solid #ffca28;
+  transform:translateY(-7px);
+}
+
+/* =========================
+   CONTROLS
+========================= */
+
+.controls{
+  position:absolute;
+  left:50%;
+  bottom:2.5%;
+  transform:translateX(-50%);
+  width:92%;
+  z-index:15;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:9px;
+}
+
+.action{
+  border:none;
+  border-radius:12px;
+  padding:12px 5px;
   color:white;
+  font-weight:900;
+  font-size:12px;
+  background:linear-gradient(#39424e,#1a1e24);
+  border:2px solid #5c6672;
+  box-shadow:0 4px 0 #080a0d;
+  cursor:pointer;
 }
 
-button:active{
-  transform:scale(.96);
+.action:active{
+  transform:translateY(3px);
+  box-shadow:0 1px 0 #080a0d;
 }
 
-button:disabled{
-  opacity:.45;
+.action.primary{
+  background:linear-gradient(#e3a921,#a76c00);
+  border-color:#ffd86a;
+  color:#171717;
 }
+
+.action.danger{
+  background:linear-gradient(#d9413d,#8d1d1a);
+  border-color:#ff7772;
+}
+
+/* =========================
+   MESSAGE
+========================= */
 
 .message{
-  margin-top:12px;
-  background:#111;
-  padding:12px;
-  border-radius:12px;
+  position:absolute;
+  left:50%;
+  top:6%;
+  transform:translateX(-50%);
+  background:#0b0d10e8;
+  border:2px solid #59616b;
+  border-radius:30px;
+  padding:10px 18px;
+  font-size:13px;
   text-align:center;
-  min-height:45px;
+  z-index:16;
+  min-width:220px;
+  max-width:80%;
 }
 
-.result{
-  display:none;
+/* =========================
+   SCORE POPUP
+========================= */
+
+.scorePop{
+  position:absolute;
+  left:50%;
+  top:43%;
+  transform:translate(-50%,-50%);
+  font-size:35px;
+  font-weight:1000;
+  color:#ffcf38;
+  text-shadow:0 3px 10px #000;
+  pointer-events:none;
+  opacity:0;
+  z-index:30;
+}
+
+.scorePop.show{
+  animation:scorePop 1s ease-out;
+}
+
+@keyframes scorePop{
+  0%{
+    opacity:0;
+    transform:translate(-50%,0) scale(.5);
+  }
+  30%{
+    opacity:1;
+    transform:translate(-50%,-30px) scale(1.2);
+  }
+  100%{
+    opacity:0;
+    transform:translate(-50%,-100px) scale(1);
+  }
+}
+
+/* =========================
+   RESULT
+========================= */
+
+.resultScreen{
   position:fixed;
   inset:0;
-  background:#000c;
-  justify-content:center;
+  z-index:100;
+  background:rgba(3,4,6,.93);
+  display:none;
   align-items:center;
+  justify-content:center;
   padding:20px;
 }
 
-.result-box{
-  background:white;
-  color:#111;
+.resultScreen.show{
+  display:flex;
+}
+
+.resultCard{
   width:100%;
-  max-width:400px;
-  padding:25px;
-  border-radius:20px;
+  max-width:430px;
   text-align:center;
+  background:linear-gradient(180deg,#282f38,#11151b);
+  border:3px solid #e1ad2c;
+  border-radius:24px;
+  padding:30px 20px;
+  box-shadow:0 20px 60px #000;
 }
 
-.result-box h2{
-  color:#d71920;
+.resultCard h1{
+  margin:0 0 10px;
+  color:#ffca28;
 }
 
-@media(max-width:600px){
+.finalScore{
+  font-size:65px;
+  font-weight:1000;
+  margin:10px;
+}
+
+.resultStars{
+  font-size:35px;
+  margin:10px;
+}
+
+.playAgain{
+  border:none;
+  padding:14px 30px;
+  border-radius:12px;
+  background:#e5ad27;
+  color:#171717;
+  font-weight:1000;
+  font-size:16px;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px){
+
+  .topbar{
+    height:62px;
+  }
+
+  .logo{
+    font-size:13px;
+  }
+
+  .timerBox,
+  .scoreBox{
+    min-width:60px;
+    padding:5px 7px;
+  }
+
+  .value{
+    font-size:16px;
+  }
+
   .stage{
-    min-height:600px;
+    min-height:760px;
   }
 
-  .person img{
-    height:130px;
+  .backWall{
+    height:38%;
   }
 
-  .person h3{
-    font-size:14px;
+  .backWall .showTitle{
+    top:25px;
+    font-size:19px;
+    letter-spacing:1px;
   }
 
-  .pan{
-    width:200px;
+  .contestant{
+    left:1%;
+    top:16%;
+    width:170px;
+    height:280px;
+  }
+
+  .jessyImage{
+    width:160px;
+    height:250px;
+    left:5px;
+  }
+
+  .judgeArea{
+    right:0;
+    top:14%;
+    width:170px;
+    height:250px;
+  }
+
+  .judgeImage{
+    width:165px;
+    height:210px;
+  }
+
+  .judgeCard{
+    min-width:110px;
+    padding:5px 8px;
+  }
+
+  .judgeCard strong{
+    font-size:11px;
+  }
+
+  .speech{
+    width:140px;
+    font-size:10px;
+    left:-20px;
+  }
+
+  .nameTag{
+    left:25px;
+    font-size:11px;
+    padding:5px 12px;
+  }
+
+  .counter{
+    left:2%;
+    right:2%;
+    bottom:17%;
+    height:190px;
+  }
+
+  .stove{
+    left:50%;
+    transform:translateX(-50%);
+    top:15px;
+    width:180px;
+  }
+
+  .ingredientsTray{
+    left:8px;
+    top:75px;
+    gap:4px;
+  }
+
+  .ingredientBox{
+    width:43px;
+    height:43px;
+    font-size:20px;
+  }
+
+  .pot{
+    width:125px;
+    height:62px;
+  }
+
+  .controls{
+    bottom:2%;
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .message{
+    top:5%;
+    font-size:11px;
   }
 }
 </style>
@@ -263,127 +809,220 @@ button:disabled{
 
 <body>
 
-<div class="game">
+<div id="game">
 
-  <div class="header">
-    <h1>🍜 JESSY'S INDOMIE COOKING CHALLENGE</h1>
-    <p>Cook • Impress the Judge • Serve • Win!</p>
-  </div>
+  <div class="topbar">
 
-  <div class="stats">
-    <div>⏱️ Time: <span id="time">60</span>s</div>
-    <div>⭐ Score: <span id="score">0</span></div>
-    <div>🔥 Level: <span id="level">1</span></div>
+    <div class="logo">
+      JESSY <span>COOKING CHALLENGE</span>
+    </div>
+
+    <div class="timerBox" id="timerBox">
+      <span class="smallLabel">Time</span>
+      <span class="value" id="timer">90</span>
+    </div>
+
+    <div class="scoreBox">
+      <span class="smallLabel">Score</span>
+      <span class="value"><span id="score">0</span></span>
+    </div>
+
   </div>
 
   <div class="stage">
 
-    <div class="characters">
+    <div class="backWall">
 
-      <div class="person judge">
-        <img src="Screenshot_2026-08-24-11-10-43-58_680d03679600f7af0b4c700c6b270fe7.jpg"
-             alt="Judge">
-        <h3>👩‍⚖️ JUDGE</h3>
+      <div class="wallLight one"></div>
+      <div class="wallLight two"></div>
+      <div class="wallLight three"></div>
 
-        <div class="judge-comment" id="judgeComment">
-          I'm ready to judge your Indomie!
-        </div>
-      </div>
-
-      <div class="person contestant">
-        <img src="1787567625036.png"
-             alt="Jessy Contestant">
-        <h3>👩‍🍳 JESSY</h3>
+      <div class="showTitle">
+        INDOMIE <span>COOKING ARENA</span>
       </div>
 
     </div>
 
-    <div class="cooking-area">
+    <div class="floor"></div>
 
-      <div class="table">
+    <!-- CONTESTANT -->
 
-        <div class="stove">
+    <div class="contestant">
 
-          <div class="fire">🔥</div>
+      <div class="contestantGlow"></div>
 
-          <div class="pan">
-            <div class="food empty" id="food">
-              🍳
-            </div>
+      <img
+        class="jessyImage"
+        src="1787567625036.png"
+        alt="Jessy">
+
+      <div class="nameTag">
+        👩‍🍳 JESSY
+      </div>
+
+    </div>
+
+    <!-- JUDGE -->
+
+    <div class="judgeArea">
+
+      <div class="judgeCard">
+        <strong>👩‍⚖️ THE JUDGE</strong>
+        <span>MASTER CHEF</span>
+      </div>
+
+      <div class="speech" id="speech">
+        Welcome, Jessy! Show me what you can cook.
+      </div>
+
+      <img
+        class="judgeImage"
+        src="Screenshot_2026-08-24-11-10-43-58_680d03679600f7af0b4c700c6b270fe7.jpg"
+        alt="Judge">
+
+    </div>
+
+    <!-- MESSAGE -->
+
+    <div class="message" id="message">
+      Start the challenge and prepare your Indomie!
+    </div>
+
+    <!-- COUNTER -->
+
+    <div class="counter">
+
+      <div class="counterTop"></div>
+
+      <div class="ingredientsTray">
+
+        <button
+          class="ingredientBox"
+          data-item="noodles"
+          onclick="selectIngredient(this,'noodles')">
+          🍜
+        </button>
+
+        <button
+          class="ingredientBox"
+          data-item="egg"
+          onclick="selectIngredient(this,'egg')">
+          🥚
+        </button>
+
+        <button
+          class="ingredientBox"
+          data-item="vegetable"
+          onclick="selectIngredient(this,'vegetable')">
+          🥬
+        </button>
+
+        <button
+          class="ingredientBox"
+          data-item="onion"
+          onclick="selectIngredient(this,'onion')">
+          🧅
+        </button>
+
+        <button
+          class="ingredientBox"
+          data-item="pepper"
+          onclick="selectIngredient(this,'pepper')">
+          🌶️
+        </button>
+
+      </div>
+
+      <div class="stove">
+
+        <div class="burner"></div>
+
+        <div class="flame" id="flame">
+          🔥
+        </div>
+
+        <div class="pot">
+
+          <div class="potInside">
+
+            <div class="noodles" id="noodles"></div>
+
+            <div class="foodExtras" id="foodExtras"></div>
+
           </div>
 
-          <h3 id="foodStatus">The pan is empty</h3>
+          <div class="handle"></div>
 
-        </div>
-
-        <div class="ingredients">
-
-          <button class="ingredient" onclick="addIngredient('🍜 Indomie')">
-            🍜 Indomie
-          </button>
-
-          <button class="ingredient" onclick="addIngredient('🥚 Egg')">
-            🥚 Egg
-          </button>
-
-          <button class="ingredient" onclick="addIngredient('🧅 Onion')">
-            🧅 Onion
-          </button>
-
-          <button class="ingredient" onclick="addIngredient('🌶️ Pepper')">
-            🌶️ Pepper
-          </button>
-
-          <button class="ingredient" onclick="addIngredient('🥬 Vegetable')">
-            🥬 Vegetable
-          </button>
-
-        </div>
-
-        <div class="controls">
-
-          <button onclick="startCooking()">
-            🍳 Start Cooking
-          </button>
-
-          <button onclick="stirFood()">
-            🥄 Stir
-          </button>
-
-          <button onclick="cookFood()">
-            🔥 Cook
-          </button>
-
-          <button onclick="serveFood()">
-            🍽️ Serve
-          </button>
-
-        </div>
-
-        <div class="message" id="message">
-          Choose your ingredients to begin!
         </div>
 
       </div>
 
+    </div>
+
+    <!-- CONTROLS -->
+
+    <div class="controls">
+
+      <button
+        class="action primary"
+        onclick="startChallenge()">
+        ▶ START
+      </button>
+
+      <button
+        class="action"
+        onclick="cook()">
+        🔥 COOK
+      </button>
+
+      <button
+        class="action"
+        onclick="stir()">
+        🥄 STIR
+      </button>
+
+      <button
+        class="action danger"
+        onclick="serve()">
+        🍽️ SERVE
+      </button>
+
+    </div>
+
+    <div class="scorePop" id="scorePop">
+      +10
     </div>
 
   </div>
 
 </div>
 
-<div class="result" id="result">
+<!-- RESULT -->
 
-  <div class="result-box">
+<div class="resultScreen" id="resultScreen">
 
-    <h2>🏆 COMPETITION RESULT</h2>
+  <div class="resultCard">
 
-    <h1 id="finalScore">0 / 100</h1>
+    <h1 id="resultTitle">
+      🏆 CHALLENGE COMPLETE
+    </h1>
 
-    <p id="finalMessage"></p>
+    <div class="resultStars" id="resultStars">
+      ⭐⭐⭐⭐⭐
+    </div>
 
-    <button onclick="location.reload()">
-      🔄 Play Again
+    <div class="finalScore">
+      <span id="finalScore">0</span>
+    </div>
+
+    <p id="resultText">
+      The judge is ready to give your final result.
+    </p>
+
+    <button
+      class="playAgain"
+      onclick="location.reload()">
+      🔄 PLAY AGAIN
     </button>
 
   </div>
@@ -392,48 +1031,79 @@ button:disabled{
 
 <script>
 
-let time = 60;
+let gameStarted = false;
+let time = 90;
 let score = 0;
-let cooking = false;
+let selectedIngredient = null;
 let ingredients = [];
-let timer;
+let timerInterval = null;
+let cooked = false;
 
-const timeDisplay = document.getElementById("time");
-const scoreDisplay = document.getElementById("score");
-const food = document.getElementById("food");
-const foodStatus = document.getElementById("foodStatus");
-const message = document.getElementById("message");
-const judgeComment = document.getElementById("judgeComment");
+const timerElement =
+  document.getElementById("timer");
 
-function startCooking(){
+const scoreElement =
+  document.getElementById("score");
 
-  if(cooking) return;
+const timerBox =
+  document.getElementById("timerBox");
 
-  cooking = true;
+const message =
+  document.getElementById("message");
+
+const speech =
+  document.getElementById("speech");
+
+const flame =
+  document.getElementById("flame");
+
+const noodles =
+  document.getElementById("noodles");
+
+const foodExtras =
+  document.getElementById("foodExtras");
+
+const scorePop =
+  document.getElementById("scorePop");
+
+const resultScreen =
+  document.getElementById("resultScreen");
+
+
+function startChallenge(){
+
+  if(gameStarted) return;
+
+  gameStarted = true;
 
   message.textContent =
-    "🔥 Cooking has started! Add your Indomie and ingredients.";
+    "🔥 Challenge started! Add your Indomie first.";
 
-  judgeComment.textContent =
-    "Let's see what Jessy can cook!";
+  speech.textContent =
+    "The clock is running. Let's see what you've got, Jessy!";
 
-  timer = setInterval(function(){
+  timerInterval = setInterval(function(){
 
     time--;
 
-    timeDisplay.textContent = time;
+    timerElement.textContent =
+      time;
+
+    if(time <= 20){
+      timerBox.classList.add("danger");
+    }
 
     if(time <= 0){
 
-      clearInterval(timer);
+      clearInterval(timerInterval);
 
-      cooking = false;
+      gameStarted = false;
 
       message.textContent =
-        "⏰ Time is up! You must serve your food.";
+        "⏰ Time is up! Serve your dish!";
 
-      judgeComment.textContent =
-        "Time is up! Serve your dish.";
+      speech.textContent =
+        "Time is up! Present your dish.";
 
     }
 
@@ -441,12 +1111,35 @@ function startCooking(){
 
 }
 
-function addIngredient(item){
 
-  if(!cooking){
+function selectIngredient(button,item){
+
+  if(!gameStarted){
 
     message.textContent =
-      "Press Start Cooking first!";
+      "Press START before choosing ingredients.";
+
+    return;
+
+  }
+
+  if(item === "noodles" && ingredients.includes("noodles")){
+
+    message.textContent =
+      "You've already added the Indomie.";
+
+    return;
+
+  }
+
+  if(item !== "noodles" &&
+     !ingredients.includes("noodles")){
+
+    message.textContent =
+      "🍜 Add the Indomie before the other ingredients.";
+
+    speech.textContent =
+      "Jessy, start with the Indomie.";
 
     return;
 
@@ -455,95 +1148,156 @@ function addIngredient(item){
   if(ingredients.includes(item)){
 
     message.textContent =
-      item + " is already in the pan!";
+      "That ingredient is already in the pot.";
 
     return;
 
   }
+
+  document
+    .querySelectorAll(".ingredientBox")
+    .forEach(function(el){
+      el.classList.remove("selected");
+    });
+
+  button.classList.add("selected");
+
+  selectedIngredient = item;
+
+  addIngredient(item);
+
+}
+
+
+function addIngredient(item){
 
   ingredients.push(item);
 
-  score += 5;
+  if(item === "noodles"){
 
-  scoreDisplay.textContent = score;
+    noodles.classList.add("show");
 
-  if(ingredients.length === 1){
+    score += 15;
 
-    food.classList.remove("empty");
+    message.textContent =
+      "🍜 Indomie added to the pot!";
 
-    food.textContent = "🍜";
-
-    foodStatus.textContent =
-      "Indomie added to the pan!";
-
-  }else{
-
-    food.textContent =
-      "🍜🥚🥬";
-
-    foodStatus.textContent =
-      "Your Indomie is getting better!";
+    speech.textContent =
+      "Good start. Now build your dish.";
 
   }
 
-  message.textContent =
-    item + " added!";
+  if(item === "egg"){
 
-  judgeComment.textContent =
-    "Good choice! Keep cooking.";
+    foodExtras.textContent += "🥚";
+
+    foodExtras.classList.add("show");
+
+    score += 8;
+
+    message.textContent =
+      "🥚 Egg added!";
+
+  }
+
+  if(item === "vegetable"){
+
+    foodExtras.textContent += "🥬";
+
+    foodExtras.classList.add("show");
+
+    score += 8;
+
+    message.textContent =
+      "🥬 Vegetable added!";
+
+  }
+
+  if(item === "onion"){
+
+    foodExtras.textContent += "🧅";
+
+    foodExtras.classList.add("show");
+
+    score += 6;
+
+    message.textContent =
+      "🧅 Onion added!";
+
+  }
+
+  if(item === "pepper"){
+
+    foodExtras.textContent += "🌶️";
+
+    foodExtras.classList.add("show");
+
+    score += 6;
+
+    message.textContent =
+      "🌶️ Pepper added!";
+
+  }
+
+  updateScore();
 
 }
 
-function stirFood(){
 
-  if(!cooking){
+function cook(){
+
+  if(!gameStarted){
 
     message.textContent =
-      "Start cooking first!";
+      "Press START first.";
 
     return;
 
   }
 
-  if(ingredients.length === 0){
+  if(!ingredients.includes("noodles")){
 
     message.textContent =
-      "There is nothing to stir yet!";
+      "🍜 You need Indomie in the pot.";
 
     return;
 
   }
 
-  score += 5;
+  flame.classList.add("on");
 
-  scoreDisplay.textContent = score;
+  cooked = true;
 
-  foodStatus.textContent =
-    "🥄 You are stirring the Indomie!";
+  score += 15;
+
+  updateScore();
 
   message.textContent =
-    "Nice stirring!";
+    "🔥 The stove is on! Your Indomie is cooking.";
 
-  judgeComment.textContent =
-    "Good technique, Jessy!";
+  speech.textContent =
+    "Good! Watch the heat carefully.";
+
+  popScore("+15");
 
 }
 
-function cookFood(){
 
-  if(!cooking){
+function stir(){
+
+  if(!gameStarted){
 
     message.textContent =
-      "Start cooking first!";
+      "Start the challenge first.";
 
     return;
 
   }
 
-  if(!ingredients.includes("🍜 Indomie")){
+  if(!ingredients.includes("noodles")){
 
     message.textContent =
-      "You need to add Indomie first!";
+      "There is nothing to stir yet.";
 
     return;
 
@@ -551,97 +1305,189 @@ function cookFood(){
 
   score += 10;
 
-  scoreDisplay.textContent = score;
-
-  food.classList.add("cooked");
-
-  food.textContent =
-    "🍜🔥";
-
-  foodStatus.textContent =
-    "🔥 Your Indomie is cooking!";
+  updateScore();
 
   message.textContent =
-    "The Indomie is cooking nicely!";
+    "🥄 Jessy is stirring the Indomie.";
 
-  judgeComment.textContent =
-    "Mmm... that looks promising!";
+  speech.textContent =
+    "Nice technique! Keep stirring.";
+
+  popScore("+10");
+
+  const pot =
+    document.querySelector(".pot");
+
+  pot.animate(
+    [
+      {transform:"translateX(-50%) rotate(-2deg)"},
+      {transform:"translateX(-50%) rotate(2deg)"},
+      {transform:"translateX(-50%) rotate(-2deg)"}
+    ],
+    {
+      duration:500,
+      iterations:2
+    }
+  );
 
 }
 
-function serveFood(){
 
-  if(!cooking){
+function serve(){
 
-    finishGame();
-
-    return;
-
-  }
-
-  if(!ingredients.includes("🍜 Indomie")){
+  if(!gameStarted){
 
     message.textContent =
-      "You cannot serve an empty dish!";
+      "Start the challenge first.";
 
     return;
 
   }
 
-  clearInterval(timer);
+  if(!ingredients.includes("noodles")){
 
-  cooking = false;
+    message.textContent =
+      "You haven't prepared the Indomie.";
 
-  score += ingredients.length * 5;
+    return;
+
+  }
+
+  clearInterval(timerInterval);
+
+  gameStarted = false;
+
+  flame.classList.remove("on");
+
+  let bonus = 0;
+
+  if(cooked){
+    bonus += 15;
+  }
+
+  if(ingredients.length >= 3){
+    bonus += 10;
+  }
+
+  if(time > 30){
+    bonus += 10;
+  }
+
+  score += bonus;
 
   if(score > 100){
     score = 100;
   }
 
-  scoreDisplay.textContent = score;
+  updateScore();
 
-  finishGame();
+  showResult();
 
 }
 
-function finishGame(){
 
-  document.getElementById("finalScore").textContent =
+function updateScore(){
+
+  if(score > 100){
+    score = 100;
+  }
+
+  scoreElement.textContent =
+    score;
+
+}
+
+
+function popScore(text){
+
+  scorePop.textContent =
+    text;
+
+  scorePop.classList.remove("show");
+
+  void scorePop.offsetWidth;
+
+  scorePop.classList.add("show");
+
+}
+
+
+function showResult(){
+
+  const finalScore =
+    document.getElementById("finalScore");
+
+  const resultTitle =
+    document.getElementById("resultTitle");
+
+  const resultText =
+    document.getElementById("resultText");
+
+  const resultStars =
+    document.getElementById("resultStars");
+
+  finalScore.textContent =
     score + " / 100";
 
-  let finalMessage;
+  if(score >= 85){
 
-  if(score >= 80){
+    resultTitle.textContent =
+      "🏆 JESSY IS THE CHAMPION!";
 
-    finalMessage =
-      "🏆 AMAZING! The judge loved your Indomie! You are the champion!";
+    resultStars.textContent =
+      "⭐⭐⭐⭐⭐";
 
-    judgeComment.textContent =
-      "Excellent dish! You deserve the trophy!";
+    resultText.textContent =
+      "The judge loved your Indomie! Excellent cooking, timing and presentation.";
 
-  }else if(score >= 50){
+    speech.textContent =
+      "Outstanding, Jessy! You are today's champion!";
 
-    finalMessage =
-      "🥈 GREAT JOB! Your Indomie was good, but you can improve.";
+  }else if(score >= 65){
 
-    judgeComment.textContent =
-      "Good effort! Keep practicing.";
+    resultTitle.textContent =
+      "🥈 GREAT PERFORMANCE!";
+
+    resultStars.textContent =
+      "⭐⭐⭐⭐";
+
+    resultText.textContent =
+      "Very good cooking! A little more attention to timing could make you champion.";
+
+    speech.textContent =
+      "Very impressive. Keep improving!";
+
+  }else if(score >= 45){
+
+    resultTitle.textContent =
+      "🥉 GOOD TRY!";
+
+    resultStars.textContent =
+      "⭐⭐⭐";
+
+    resultText.textContent =
+      "You completed the challenge, but there is still room to improve.";
+
+    speech.textContent =
+      "Good effort, Jessy.";
 
   }else{
 
-    finalMessage =
-      "🍜 KEEP PRACTICING! Your next dish can be much better.";
+    resultTitle.textContent =
+      "KEEP PRACTICING!";
 
-    judgeComment.textContent =
-      "You need more practice.";
+    resultStars.textContent =
+      "⭐⭐";
+
+    resultText.textContent =
+      "Don't give up. Try different ingredients and improve your cooking technique.";
+
+    speech.textContent =
+      "Practice makes perfect. Try again!";
 
   }
 
-  document.getElementById("finalMessage").textContent =
-    finalMessage;
-
-  document.getElementById("result").style.display =
-    "flex";
+  resultScreen.classList.add("show");
 
 }
 
