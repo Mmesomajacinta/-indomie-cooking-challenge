@@ -1,1 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indomie Cooking Challenge</title>
 
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #fff3d6, #ffd36b);
+  min-height: 100vh;
+  color: #2b1600;
+}
+
+header {
+  background: #d71920;
+  color: white;
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 4px 12px #0005;
+}
+
+header h1 {
+  font-size: 28px;
+}
+
+header p {
+  margin-top: 5px;
+}
+
+.container {
+  width: 95%;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 8px 20px #0002;
+}
+
+h2 {
+  color: #d71920;
+  margin-bottom: 15px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 13px 20px;
+  background: #d71920;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 5px;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+button:disabled {
+  background: #999;
+}
+
+.flavors,
+.ingredients {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.option {
+  border: 3px solid transparent;
+  background: #fff8e8;
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.option.selected {
+  border-color: #d71920;
+  background: #ffe1a3;
+}
+
+.option .emoji {
+  font-size: 45px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.kitchen {
+  background: linear-gradient(#d8d8d8, #999);
+  border-radius: 20px;
+  padding: 25px;
+  text-align: center;
+  min-height: 250px;
+}
+
+.stove {
+  font-size: 90px;
+}
+
+.pan {
+  font-size: 65px;
+}
+
+.timer {
+  font-size: 40px;
+  font-weight: bold;
+  color: #d71920;
+  margin: 10px;
+}
+
+.progress {
+  width: 100%;
+  height: 20px;
+  background: #ddd;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #d71920;
+  transition: width .3s;
+}
+
+.score {
+  font-size: 45px;
+  font-weight: bold;
+  color: #d71920;
+  text-align: center;
+}
+
+.award {
+  font-size: 80px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.status {
+  padding: 12px;
+  border-radius: 10px;
+  background: #fff0c2;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+ul {
+  margin-left: 20px;
+  line-height: 1.8;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #663300;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🍜 INDOMIE COOKING CHALLENGE</h1>
+  <p>Become the ultimate noodle chef!</p>
+</header>
+
+<div class="container">
+
+  <!-- PLAYER -->
+  <section class="card" id="playerSection">
+    <h2>👩‍🍳 Chef Registration</h2>
+    <input id="chefName" type="text" placeholder="Enter your chef name">
+    <button onclick="startGame()">START COMPETITION 🔥</button>
+  </section>
+
+  <!-- FLAVOR -->
+  <section class="card hidden" id="flavorSection">
+    <h2>🍜 Choose Your Indomie</h2>
+
+    <div class="flavors">
+
+      <div class="option" onclick="chooseFlavor(this,'Chicken')">
+        <span class="emoji">🍗</span>
+        Chicken
+      </div>
+
+      <div class="option" onclick="chooseFlavor(this,'Onion')">
+        <span class="emoji">🧅</span>
+        Onion
+      </div>
+
+      <div class="option" onclick="chooseFlavor(this,'Pepper')">
+        <span class="emoji">🌶️</span>
+        Pepper
+      </div>
+
+      <div class="option" onclick="chooseFlavor(this,'Special')">
+        <span class="emoji">⭐</span>
+        Special
+      </div>
+
+    </div>
+
+    <button onclick="goIngredients()">NEXT ➡️</button>
+  </section>
+
+  <!-- INGREDIENTS -->
+  <section class="card hidden" id="ingredientSection">
+
+    <h2>🥕 Choose Your Ingredients</h2>
+
+    <div class="ingredients">
+
+      <div class="option" onclick="toggleIngredient(this,'Egg')">
+        <span class="emoji">🥚</span>
+        Egg
+      </div>
+
+      <div class="option" onclick="toggleIngredient(this,'Fish')">
+        <span class="emoji">🐟</span>
+        Fish
+      </div>
+
+      <div class="option" onclick="toggleIngredient(this,'Onion')">
+        <span class="emoji">🧅</span>
+        Onion
+      </div>
+
+      <div class="option" onclick="toggleIngredient(this,'Pepper')">
+        <span class="emoji">🌶️</span>
+        Pepper
+      </div>
+
+      <div class="option" onclick="toggleIngredient(this,'Carrot')">
+        <span class="emoji">🥕</span>
+        Carrot
+      </div>
+
+      <div class="option" onclick="toggleIngredient(this,'Vegetables')">
+        <span class="emoji">🥬</span>
+        Vegetables
+      </div>
+
+    </div>
+
+    <button onclick="startCooking()">START COOKING 🍳</button>
+
+  </section>
+
+  <!-- KITCHEN -->
+  <section class="card hidden" id="cookingSection">
+
+    <h2>🔥 Cooking Station</h2>
+
+    <div class="kitchen">
+
+      <div class="stove">🔥</div>
+
+      <div class="pan">🍳</div>
+
+      <div class="timer" id="timer">30</div>
+
+      <div class="progress">
+        <div class="progress-bar" id="progress"></div>
+      </div>
+
+      <div class="status" id="status">
+        Waiting for cooking to begin...
+      </div>
+
+      <button id="cookButton" onclick="cookAction()">
+        COOK 🔥
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- RESULT -->
+  <section class="card hidden" id="resultSection">
+
+    <h2>🏆 Judges' Result</h2>
+
+    <div class="award" id="award">🏆</div>
+
+    <div class="score" id="score">0/100</div>
+
+    <p id="resultText" style="text-align:center;margin:15px;"></p>
+
+    <h3>📋 Competition Report</h3>
+
+    <ul id="report"></ul>
+
+    <button onclick="location.reload()">
+      PLAY AGAIN 🔄
+    </button>
+
+  </section>
+
+</div>
+
+<footer>
+  🍜 Indomie Cooking Challenge — Chef Jessy Edition
+</footer>
+
+<script>
+
+let chef = "";
+let flavor = "";
+let ingredients = [];
+let cookingPoints = 0;
+let timeLeft = 30;
+let timerInterval;
+
+function startGame() {
+
+  chef = document.getElementById("chefName").value.trim();
+
+  if (!chef) {
+    alert("Please enter your chef name!");
+    return;
+  }
+
+  document.getElementById("playerSection").classList.add("hidden");
+  document.getElementById("flavorSection").classList.remove("hidden");
+}
+
+function chooseFlavor(element, selectedFlavor) {
+
+  document.querySelectorAll("#flavorSection .option")
+    .forEach(item => item.classList.remove("selected"));
+
+  element.classList.add("selected");
+
+  flavor = selectedFlavor;
+}
+
+function goIngredients() {
+
+  if (!flavor) {
+    alert("Choose an Indomie flavor first!");
+    return;
+  }
+
+  document.getElementById("flavorSection").classList.add("hidden");
+  document.getElementById("ingredientSection").classList.remove("hidden");
+}
+
+function toggleIngredient(element, ingredient) {
+
+  element.classList.toggle("selected");
+
+  if (ingredients.includes(ingredient)) {
+
+    ingredients = ingredients.filter(
+      item => item !== ingredient
+    );
+
+  } else {
+
+    ingredients.push(ingredient);
+
+  }
+}
+
+function startCooking() {
+
+  if (ingredients.length === 0) {
+    alert("Choose at least one ingredient!");
+    return;
+  }
+
+  document.getElementById("ingredientSection").classList.add("hidden");
+  document.getElementById("cookingSection").classList.remove("hidden");
+
+  document.getElementById("status").textContent =
+    "Cooking has started! Tap COOK as many times as possible!";
+
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+
+  timeLeft--;
+
+  document.getElementById("timer").textContent = timeLeft;
+
+  let progress =
+    ((30 - timeLeft) / 30) * 100;
+
+  document.getElementById("progress").style.width =
+    progress + "%";
+
+  if (timeLeft <= 0) {
+
+    clearInterval(timerInterval);
+
+    document.getElementById("cookButton").disabled = true;
+
+    finishCooking();
+  }
+}
+
+function cookAction() {
+
+  cookingPoints += Math.floor(Math.random() * 6) + 5;
+
+  if (cookingPoints > 100) {
+    cookingPoints = 100;
+  }
+
+  document.getElementById("status").textContent =
+    "🔥 Great cooking, " + chef + "! Keep going!";
+}
+
+function finishCooking() {
+
+  let ingredientBonus =
+    ingredients.length * 5;
+
+  let finalScore =
+    Math.min(100, cookingPoints + ingredientBonus);
+
+  showResult(finalScore);
+}
+
+function showResult(finalScore) {
+
+  document.getElementById("cookingSection")
+    .classList.add("hidden");
+
+  document.getElementById("resultSection")
+    .classList.remove("hidden");
+
+  document.getElementById("score").textContent =
+    finalScore + "/100";
+
+  let award;
+  let message;
+
+  if (finalScore >= 85) {
+
+    award = "🥇";
+    message =
+      "Amazing! You are the champion of this round!";
+
+  } else if (finalScore >= 65) {
+
+    award = "🥈";
+    message =
+      "Great job! You earned second place!";
+
+  } else if (finalScore >= 45) {
+
+    award = "🥉";
+    message =
+      "Good effort! You earned third place!";
+
+  } else {
+
+    award = "🍜";
+    message =
+      "Keep practicing, chef! Your next dish can be better.";
+
+  }
+
+  document.getElementById("award").textContent = award;
+
+  document.getElementById("resultText").textContent =
+    chef + ", " + message;
+
+  document.getElementById("report").innerHTML = `
+    <li>Chef: ${chef}</li>
+    <li>Indomie flavor: ${flavor}</li>
+    <li>Ingredients: ${ingredients.join(", ")}</li>
+    <li>Cooking score: ${cookingPoints}</li>
+    <li>Final score: ${finalScore}/100</li>
+  `;
+}
+
+</script>
+
+</body>
+  </html>
